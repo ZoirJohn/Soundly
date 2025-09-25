@@ -22,7 +22,7 @@ export const links: Route.LinksFunction = () => [
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 15000,
+            staleTime: 60000,
             refetchOnReconnect: false,
             refetchOnMount: false,
             refetchOnWindowFocus: false,
