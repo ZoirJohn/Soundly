@@ -1,7 +1,12 @@
+import AlbumCard from "shared/components/ui/albumCard";
+
 export default function Home() {
-    return (
-        <div className="max-w-7xl mx-auto">
-            <h1 className="text-5xl font-bold">Welcome Home!</h1>
-        </div>
-    );
+	return (
+		<section className="max-w-7xl mx-auto mt-7">
+			<h4 className="rowTitle">Albums</h4>
+			<article>
+				<AlbumCard />
+			</article>
+		</section>
+	);
 }
