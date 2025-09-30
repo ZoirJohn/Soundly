@@ -130,7 +130,22 @@
 	body {
 		@apply bg-gray-950 text-white;
 	}
+	h5 {
+		@apply text-lg font-semibold;
+	}
+	h6 {
+		@apply text-[10px] font-semibold;
+	}
 	.rowTitle {
 		@apply text-lg font-semibold mb-4;
+	}
+	.albumCardForYou {
+		@apply font-semibold leading-3;
+	}
+	.albumCardTitle {
+		@apply text-[#fcfcfc];
+	}
+	.albumCardDesc {
+		@apply text-[#9898a6] leading-4.75;
 	}
 }

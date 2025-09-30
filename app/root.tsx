@@ -47,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<body>
 				<div
 					id="wrapper"
-					className="grid grid-cols-[240px_1200px] justify-center bg-background min-h-screen"
+					className="grid grid-cols-[240px_1200px] grid-rows-[70px_auto] justify-center bg-background min-h-screen"
 				>
 					<aside className="col-span-1 row-span-2"></aside>
 					<Header />
