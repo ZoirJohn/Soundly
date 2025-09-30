@@ -3,7 +3,7 @@ import { client } from "shared/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "shared/components/ui/albumCard";
 
 export default function Home() {
-	const { data } = useQuery({
+	const { data, isLoading } = useQuery({
 		queryKey: ["playlists"],
 		queryFn: async () =>
 			(
@@ -16,18 +16,31 @@ export default function Home() {
 				})
 			).data,
 	});
+	const albums = data?.data.length ? data.data : [];
+	const skeletons = Array(4).fill(0);
 	return (
 		<section className="max-w-7xl mx-auto mt-7">
-			<h4 className="rowTitle">Albums</h4>
+			<div>
+				<h4 className="rowTitle">{"Albums"}</h4>
+				<div>
+					<div></div>
+				</div>
+			</div>
+
 			<article className="flex flex-wrap gap-6">
-				{data?.data.map(({ attributes,id }) => (
-					<AlbumCard
-						title={attributes.title}
-						description={attributes.description || ""}
-						key={id}
-					/>
-				))}
-				<AlbumCardSkeleton />
+				{isLoading
+					? skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
+					: albums.map(({ attributes, id }) => {
+							return (
+								<AlbumCard
+									title={attributes.title}
+									description={attributes.description || ""}
+									titleColor="red"
+									img={attributes.images.main?.length ? attributes.images.main[0].url : "/assets/images/background2.png"}
+									key={id}
+								/>
+							);
+					  })}
 			</article>
 		</section>
 	);
