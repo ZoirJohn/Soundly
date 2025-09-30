@@ -133,13 +133,13 @@
 		@apply bg-gray-950 text-white;
 	}
 	h5 {
-		@apply text-lg font-semibold;
+		@apply font-semibold text-lg;
 	}
 	h6 {
-		@apply text-[10px] font-semibold;
+		@apply font-semibold text-[10px];
 	}
 	.rowTitle {
-		@apply text-lg font-semibold mb-4;
+		@apply font-semibold text-lg;
 	}
 	.albumCardForYou {
 		@apply font-semibold leading-3;

@@ -4,14 +4,14 @@ export default function Header() {
 	return (
 		<header className="flex justify-between py-4 px-13">
 			<div className="flex gap-2">
-				<PageButton>
+				<PageButton size="lg">
 					<img
 						src="assets/icons/arrow.svg"
 						alt="button-arrow-icon"
 						className="h-4 ml-3.5"
 					/>
 				</PageButton>
-				<PageButton>
+				<PageButton size="lg">
 					<img
 						src="assets/icons/arrow.svg"
 						alt="button-arrow-icon"

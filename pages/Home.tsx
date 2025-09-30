@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "shared/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "shared/components/ui/albumCard";
+import PageButton from "shared/components/ui/pageButton";
 
 export default function Home() {
 	const { data, isLoading } = useQuery({
@@ -16,14 +17,29 @@ export default function Home() {
 				})
 			).data,
 	});
+
 	const albums = data?.data.length ? data.data : [];
 	const skeletons = Array(4).fill(0);
+
 	return (
-		<section className="max-w-7xl mx-auto mt-7">
-			<div>
+		<section className="mx-auto mt-7 max-w-7xl">
+			<div className="flex flex-wrap justify-between items-center gap-6 mb-4">
 				<h4 className="rowTitle">{"Albums"}</h4>
-				<div>
-					<div></div>
+				<div className="flex gap-2">
+					<PageButton size="sm">
+						<img
+							src="/assets/icons/arrow.svg"
+							alt="button-arrow-icon"
+							className="ml-2 h-2.5"
+						/>
+					</PageButton>
+					<PageButton size="sm">
+						<img
+							src="/assets/icons/arrow.svg"
+							alt="button-arrow-icon"
+							className="ml-2 h-2.5 rotate-180"
+						/>
+					</PageButton>
 				</div>
 			</div>
 
@@ -36,7 +52,7 @@ export default function Home() {
 									title={attributes.title}
 									description={attributes.description || ""}
 									titleColor="red"
-									img={attributes.images.main?.length ? attributes.images.main[0].url : "/assets/images/background2.png"}
+									img={attributes.images.main?.length ? attributes.images.main[0].url : "/assets/images/background1.png"}
 									key={id}
 								/>
 							);
