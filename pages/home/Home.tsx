@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { client } from "shared/api/client";
+import { client } from "entities/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "shared/components/ui/albumCard";
 import PageButton from "shared/components/ui/pageButton";
 
@@ -43,7 +43,7 @@ export default function Home() {
 				</div>
 			</div>
 
-			<article className="flex flex-wrap gap-6">
+			<article className="flex flex-row flex-wrap gap-6">
 				{isLoading
 					? skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
 					: albums.map(({ attributes, id }) => {
@@ -52,7 +52,7 @@ export default function Home() {
 									title={attributes.title}
 									description={attributes.description || ""}
 									titleColor="red"
-									img={attributes.images.main?.length ? attributes.images.main[0].url : "/assets/images/background1.png"}
+									img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
 									key={id}
 								/>
 							);

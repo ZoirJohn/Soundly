@@ -54,6 +54,7 @@
 	--max-width-songCardWidth: 200px;
 	--min-height-albumCardHeight: 375px;
 	--min-height-songCardHeight: 275px;
+	--width-albumCardWidth: var(--max-width-albumCardWidth);
 }
 
 :root {

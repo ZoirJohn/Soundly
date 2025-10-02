@@ -47,14 +47,16 @@ export function Layout({ children }: { children: React.ReactNode }) {
 			<body>
 				<div
 					id="wrapper"
-					className="grid grid-cols-[240px_auto] grid-rows-[70px_auto] justify-center bg-background min-h-screen"
+					className="justify-center bg-background min-h-screen"
 				>
-					<aside className="col-span-1 row-span-2"></aside>
-					<Header />
-					<QueryClientProvider client={queryClient}>
-						<main className="px-13">{children}</main>
-						<ReactQueryDevtools initialIsOpen={false} />
-					</QueryClientProvider>
+					<div className="grid grid-cols-[240px_auto] grid-rows-[70px_auto] mx-auto max-w-[1440px]">
+						<aside className="col-span-1 row-span-2"></aside>
+						<Header />
+						<QueryClientProvider client={queryClient}>
+							<main className="px-13">{children}</main>
+							<ReactQueryDevtools initialIsOpen={false} />
+						</QueryClientProvider>
+					</div>
 				</div>
 				<Scripts />
 				<ScrollRestoration />
@@ -81,11 +83,11 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
 	}
 
 	return (
-		<main className="pt-16 p-4 container mx-auto">
+		<main className="mx-auto p-4 pt-16 container">
 			<h1>{message}</h1>
 			<p>{details}</p>
 			{stack && (
-				<pre className="w-full p-4 overflow-x-auto">
+				<pre className="p-4 w-full overflow-x-auto">
 					<code>{stack}</code>
 				</pre>
 			)}

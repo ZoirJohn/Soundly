@@ -5,10 +5,13 @@ export function AlbumCard({ title, description, titleColor, img }: AlbumCard) {
 				<img
 					src={img}
 					alt="album-background"
-					className="w-full"
+					className="block w-full max-w-albumCardWidth"
 				/>
 			</div>
-			<div className={`bg-[url(${img})] rounded-b-xl overflow-hidden grow`}>
+			<div
+				className={`rounded-b-xl bg-black/10 backdrop-blur-2xl overflow-hidden grow`}
+				style={{ backgroundImage: `url(${img})` }}
+			>
 				<div className="bg-black/30 backdrop-blur-xl p-4 h-full">
 					{titleColor == "red" ? <h6 className="text-pinkRed uppercase">New For You</h6> : <h6 className="text-greenBlue uppercase">New For You</h6>}
 					<h5>{title}</h5>
