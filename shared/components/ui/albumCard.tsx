@@ -1,11 +1,11 @@
 export function AlbumCard({ title, description, titleColor, img }: AlbumCard) {
 	return (
-		<article className="flex flex-col max-w-albumCardWidth h-full min-h-albumCardHeight">
+		<article className="group relative flex flex-col rounded-xl ring-black/20 hover:ring-10 max-w-albumCardWidth h-full min-h-albumCardHeight transition duration-300">
 			<div className="rounded-t-xl overflow-hidden">
 				<img
 					src={img}
 					alt="album-background"
-					className="w-albumCardWidth"
+					className="w-albumCardWidth h-albumCardHeight"
 				/>
 			</div>
 			<div
@@ -18,6 +18,13 @@ export function AlbumCard({ title, description, titleColor, img }: AlbumCard) {
 					<p className="font-semibold text-sm albumCardDesc">{description}</p>
 				</div>
 			</div>
+			<button className="right-4 bottom-24 group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-0 group-hover:opacity-100 rounded-full size-10 transition-all duration-350">
+				<img
+					className="size-3"
+					src="assets/icons/play.svg"
+					alt="play-icon"
+				/>
+			</button>
 		</article>
 	);
 }

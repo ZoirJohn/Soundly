@@ -49,7 +49,10 @@ export default function Home() {
 					? skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
 					: albums.map(({ attributes, id }) => {
 							return (
-								<Link to={'/playlists'}>
+								<Link
+									to={"/playlists"}
+									key={id}
+								>
 									<AlbumCard
 										title={attributes.title}
 										description={attributes.description || ""}
