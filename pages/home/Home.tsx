@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { client } from "entities/api/client";
+import { Link } from "react-router";
 import { AlbumCard, AlbumCardSkeleton } from "shared/components/ui/albumCard";
 import PageButton from "shared/components/ui/pageButton";
 
@@ -48,13 +49,15 @@ export default function Home() {
 					? skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
 					: albums.map(({ attributes, id }) => {
 							return (
-								<AlbumCard
-									title={attributes.title}
-									description={attributes.description || ""}
-									titleColor="red"
-									img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
-									key={id}
-								/>
+								<Link to={'/playlists'}>
+									<AlbumCard
+										title={attributes.title}
+										description={attributes.description || ""}
+										titleColor="red"
+										img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
+										key={id}
+									/>
+								</Link>
 							);
 					  })}
 			</article>

@@ -1,19 +1,19 @@
 export function AlbumCard({ title, description, titleColor, img }: AlbumCard) {
 	return (
-		<article className="flex flex-col max-w-albumCardWidth h-albumCardHeight">
+		<article className="flex flex-col max-w-albumCardWidth h-full min-h-albumCardHeight">
 			<div className="rounded-t-xl overflow-hidden">
 				<img
 					src={img}
 					alt="album-background"
-					className="block w-full max-w-albumCardWidth"
+					className="w-albumCardWidth"
 				/>
 			</div>
 			<div
-				className={`rounded-b-xl bg-black/10 backdrop-blur-2xl overflow-hidden grow`}
+				className="flex bg-cover bg-center backdrop-blur-2xl rounded-b-xl overflow-hidden grow"
 				style={{ backgroundImage: `url(${img})` }}
 			>
-				<div className="bg-black/30 backdrop-blur-xl p-4 h-full">
-					{titleColor == "red" ? <h6 className="text-pinkRed uppercase">New For You</h6> : <h6 className="text-greenBlue uppercase">New For You</h6>}
+				<div className="bg-black/20 backdrop-blur-xl p-4 grow">
+					{titleColor == "red" ? <h6 className="mb-2 text-pinkRed uppercase">New For You</h6> : <h6 className="text-greenBlue uppercase">New For You</h6>}
 					<h5>{title}</h5>
 					<p className="font-semibold text-sm albumCardDesc">{description}</p>
 				</div>
