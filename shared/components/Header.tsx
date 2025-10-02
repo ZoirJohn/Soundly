@@ -21,13 +21,18 @@ export default function Header() {
 			</div>
 			<label
 				htmlFor="search"
-				className="w-full md:max-w-[310px] xl:max-w-[390px]"
+				className="relative w-full md:max-w-[310px] xl:max-w-[390px]"
 			>
 				<input
 					type="text"
 					className="bg-darkBackground p-2.5 pl-9 border border-borderColor rounded-xl outline-0 w-full placeholder:text-white text-sm"
 					id="search"
 					placeholder="Search"
+				/>
+				<img
+					src="assets/icons/search.svg"
+					alt="search-icon"
+					className="top-1/3 absolute size-4 translate-x-2/3"
 				/>
 			</label>
 		</header>
