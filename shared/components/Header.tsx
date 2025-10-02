@@ -2,30 +2,30 @@ import PageButton from "./ui/pageButton";
 
 export default function Header() {
 	return (
-		<header className="flex justify-between py-4 px-13">
+		<header className="flex justify-between px-13 py-4">
 			<div className="flex gap-2">
 				<PageButton size="lg">
 					<img
 						src="assets/icons/arrow.svg"
 						alt="button-arrow-icon"
-						className="h-4 ml-3.5"
+						className="ml-3.5 h-4"
 					/>
 				</PageButton>
 				<PageButton size="lg">
 					<img
 						src="assets/icons/arrow.svg"
 						alt="button-arrow-icon"
-						className="rotate-180 h-4 ml-4"
+						className="ml-4 h-4 rotate-180"
 					/>
 				</PageButton>
 			</div>
 			<label
 				htmlFor="search"
-				className="max-w-[390px] w-full"
+				className="w-full md:max-w-[310px] xl:max-w-[390px]"
 			>
 				<input
 					type="text"
-					className="p-2.5 pl-9 bg-darkBackground border border-borderColor rounded-xl text-sm outline-0 placeholder:text-white w-full"
+					className="bg-darkBackground p-2.5 pl-9 border border-borderColor rounded-xl outline-0 w-full placeholder:text-white text-sm"
 					id="search"
 					placeholder="Search"
 				/>
