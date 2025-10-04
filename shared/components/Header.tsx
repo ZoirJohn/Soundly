@@ -2,7 +2,7 @@ import PageButton from "./ui/pageButton";
 
 export default function Header() {
 	return (
-		<header className="flex justify-between px-13 py-4">
+		<header className="flex justify-between px-13 py-4 col-start-2">
 			<div className="flex gap-2">
 				<PageButton size="lg">
 					<img

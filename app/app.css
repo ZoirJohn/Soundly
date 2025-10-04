@@ -49,6 +49,9 @@
 	--color-borderColor: #ebebff0d;
 	--color-pinkRed: #ef2f62;
 	--color-greenBlue: #00ffff;
+	--color-active: #00ffff;
+	--color-grayText: #9898a6;
+	--color-hover: #4c4e54;
 	--max-width-twelveHundred: 1200px;
 	--max-width-albumCardWidth: 255px;
 	--max-width-trackCardWidth: 200px;
@@ -150,6 +153,6 @@
 		@apply text-[#fcfcfc];
 	}
 	.albumCardDesc {
-		@apply text-[#9898a6] leading-4.75;
+		@apply text-grayText leading-4.75;
 	}
 }

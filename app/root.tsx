@@ -5,6 +5,7 @@ import type { Route } from "./+types/root";
 import "./app.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Header from "shared/components/Header";
+import Sidebar from "shared/components/Sidebar";
 
 export const links: Route.LinksFunction = () => [
 	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -49,12 +50,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 					id="wrapper"
 					className="justify-center bg-background min-h-screen"
 				>
-					<div className="grid grid-cols-[240px_auto] grid-rows-[70px_auto] mx-auto max-w-[1440px]">
-						<aside className="col-span-1 row-span-2"></aside>
-						<Header />
+					<div className="grid grid-cols-[300px_auto] grid-rows-[70px_1fr] min-h-screen">
 						<QueryClientProvider client={queryClient}>
-							<main className="px-13">{children}</main>
+						<Header />
+							<main className="px-13 col-start-2 col-end-3 row-start-2 row-end-3">{children}</main>
 							<ReactQueryDevtools initialIsOpen={false} />
+						<Sidebar />
 						</QueryClientProvider>
 					</div>
 				</div>
