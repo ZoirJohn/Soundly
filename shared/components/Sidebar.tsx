@@ -1,17 +1,13 @@
 import { NavLink } from "react-router";
 import { NAV_LINKS } from "shared/consts";
-import Button from "./ui/button";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
+import Button from "./ui/button";
+import { useMeQuery } from "shared/hooks/useMeQuery";
 
 export default function Sidebar() {
-	const { data } = useQuery({
-		queryKey: ["auth", "me"],
-		queryFn: async () => {
-			const response = await client.GET("/auth/me");
-			return response.data;
-		},
-	});
+	const queryClient = useQueryClient();
+	const { data, isLoading } = useMeQuery();
 	const callbackUrl = "http://localhost:5173/oauth";
 	const mutation = useMutation({
 		mutationFn: async ({ code }: { code: string }) => {
@@ -34,6 +30,9 @@ export default function Sidebar() {
 			}
 			localStorage.setItem("musicfunapi-accessToken", data.accessToken);
 			localStorage.setItem("musicfunapi-refreshToken", data.refreshToken);
+			queryClient.invalidateQueries({
+				queryKey: ["auth", "me"],
+			});
 		},
 	});
 	const handleLogin = () => {
@@ -56,13 +55,15 @@ export default function Sidebar() {
 	return (
 		<aside className="flex flex-col gap-y-8 col-start-1 col-end-2 row-start-1 row-end-3 bg-[#212124] px-3 py-4">
 			<div className="p-3 flex justify-between items-center">
-				{data?.userId ? (
+				{isLoading ? (
+					<div className="h-6"></div>
+				) : data?.userId ? (
 					<>
 						<div className="size-6 bg-accent rounded-full"></div>
 						<div className="w-4 h-1 bg-accent"></div>
 					</>
 				) : (
-					<Button onClick={mutation ? handleLogin : () => {}}>Login</Button>
+					<Button onClick={handleLogin}>Login</Button>
 				)}
 			</div>
 			<nav>
