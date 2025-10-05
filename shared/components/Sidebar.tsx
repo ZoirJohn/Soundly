@@ -1,17 +1,24 @@
 import { NavLink } from "react-router";
 import { NAV_LINKS } from "shared/consts";
 import Button from "./ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { client } from "entities/api/client";
-import { useEffect } from "react";
 
 export default function Sidebar() {
+	const { data } = useQuery({
+		queryKey: ["auth", "me"],
+		queryFn: async () => {
+			const response = await client.GET("/auth/me");
+			return response.data;
+		},
+	});
+	const callbackUrl = "http://localhost:5173/oauth";
 	const mutation = useMutation({
 		mutationFn: async ({ code }: { code: string }) => {
 			const response = await client.POST("/auth/login", {
 				body: {
 					code,
-					redirectUri: "???????",
+					redirectUri: callbackUrl,
 					rememberMe: true,
 					accessTokenTTL: "1d",
 				},
@@ -21,10 +28,16 @@ export default function Sidebar() {
 			}
 			return response.data;
 		},
+		onSuccess: (data) => {
+			if (!data) {
+				throw new Error("Invalid Response");
+			}
+			localStorage.setItem("musicfunapi-accessToken", data.accessToken);
+			localStorage.setItem("musicfunapi-refreshToken", data.refreshToken);
+		},
 	});
 	const handleLogin = () => {
 		window.addEventListener("message", handleOauthMessage);
-		const callbackUrl = "http://localhost:5173/oauth";
 		window.open(`${import.meta.env.VITE_BASE_URL}/auth/oauth-redirect?callbackUrl=${callbackUrl}`, "apihub-oauth2", "width=500,height=600");
 	};
 	const handleOauthMessage = (event: MessageEvent) => {
@@ -43,9 +56,14 @@ export default function Sidebar() {
 	return (
 		<aside className="flex flex-col gap-y-8 col-start-1 col-end-2 row-start-1 row-end-3 bg-[#212124] px-3 py-4">
 			<div className="p-3 flex justify-between items-center">
-				<div className="size-6 bg-accent rounded-full"></div>
-				<div className="w-4 h-1 bg-accent"></div>
-				<Button onClick={mutation ? handleLogin : () => {}}>Login</Button>
+				{data?.userId ? (
+					<>
+						<div className="size-6 bg-accent rounded-full"></div>
+						<div className="w-4 h-1 bg-accent"></div>
+					</>
+				) : (
+					<Button onClick={mutation ? handleLogin : () => {}}>Login</Button>
+				)}
 			</div>
 			<nav>
 				<ul>
