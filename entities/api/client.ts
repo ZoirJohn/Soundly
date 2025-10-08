@@ -1,6 +1,8 @@
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 
+const rotateKeys = () => {};
+
 const authMiddleware: Middleware = {
 	async onRequest({ request }) {
 		const accessToken = localStorage.getItem("musicfunapi-accessToken");
