@@ -1,7 +1,13 @@
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 
-const rotateKeys = () => {};
+const rotateKeys = () => {
+	client.POST("/auth/refresh", {
+		body: {
+			refreshToken: "",
+		},
+	});
+};
 
 const authMiddleware: Middleware = {
 	async onRequest({ request }) {
