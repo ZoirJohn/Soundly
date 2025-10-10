@@ -5,6 +5,7 @@ const rotateKeys = () => {
 	client.POST("/auth/refresh", {
 		body: {
 			refreshToken: "",
+			accessToken: "",
 		},
 	});
 };
