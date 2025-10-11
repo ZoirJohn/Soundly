@@ -6,7 +6,7 @@ export function useMeQuery() {
 		queryKey: ["auth", "me"],
 		queryFn: async () => {
 			const response = await client.GET("/auth/me");
-			return response.data;
+			return response;
 		},
 	});
 	return data;

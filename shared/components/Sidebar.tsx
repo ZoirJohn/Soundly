@@ -1,7 +1,8 @@
 import { NavLink } from "react-router";
 import { NAV_LINKS } from "shared/consts";
 import { useMeQuery } from "shared/hooks/useMeQuery";
-import Button from "./LoginButton";
+import LoginButton from "./LoginButton";
+import LogoutButton from "./LogoutButton";
 
 export default function Sidebar() {
 	const { data, isLoading } = useMeQuery();
@@ -9,14 +10,14 @@ export default function Sidebar() {
 		<aside className="flex flex-col gap-y-8 col-start-1 col-end-2 row-start-1 row-end-3 bg-[#212124] px-3 py-4">
 			<div className="p-3 flex justify-between items-center">
 				{isLoading ? (
-					<div className="h-6"></div>
-				) : data?.userId ? (
+					<div className="h-9"></div>
+				) : data?.data?.userId ? (
 					<>
-						<div className="size-6 bg-accent rounded-full text-black flex justify-center items-center">{data.login.split("_")[0][0]}</div>
-						<div className="w-4 h-1 bg-accent"></div>
+						<div className="size-6 bg-accent rounded-full text-black flex justify-center items-center">{data.data.login.split("_")[0][0]}</div>
+						<LogoutButton />
 					</>
 				) : (
-					<Button></Button>
+					<LoginButton />
 				)}
 			</div>
 			<nav>
