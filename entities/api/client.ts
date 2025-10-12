@@ -1,8 +1,8 @@
 import createClient, { type Middleware } from "openapi-fetch";
 import type { paths } from "./schema";
 
-const rotateKeys = () => {
-	client.POST("/auth/refresh", {
+const rotateKeys = async () => {
+	await client.POST("/auth/refresh", {
 		body: {
 			refreshToken: "",
 			accessToken: "",
