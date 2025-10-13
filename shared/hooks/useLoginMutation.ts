@@ -12,7 +12,7 @@ export default function useLoginMutation(callbackUrl: string) {
 					code,
 					redirectUri: callbackUrl,
 					rememberMe: true,
-					accessTokenTTL: "1d",
+					accessTokenTTL: "10s",
 				},
 			});
 			if (response.error) {
