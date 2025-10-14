@@ -54,7 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 					<div className="grid grid-cols-[300px_auto] grid-rows-[70px_1fr] min-h-screen">
 						<QueryClientProvider client={queryClient}>
 							<Header />
-							<main className="px-13 col-start-2 col-end-3 row-start-2 row-end-3">{children}</main>
+							<main className="pt-7 px-13 col-start-2 col-end-3 row-start-2 row-end-3 ">{children}</main>
 							<ReactQueryDevtools initialIsOpen={false} />
 							<Sidebar />
 						</QueryClientProvider>

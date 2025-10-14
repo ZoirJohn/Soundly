@@ -1,6 +1,6 @@
 export const NAV_LINKS = {
 	home: "",
-	playlists: "playlists",
+	"my playlists": "playlists",
 	tracks: "tracks",
 	profile: "auth",
 };

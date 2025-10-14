@@ -28,7 +28,7 @@ export default function Sidebar() {
 								className={({ isActive }) => `${isActive ? "text-active" : "text-white"} block p-3 hover:bg-hover rounded-md transition`}
 								to={"/" + href}
 							>
-								{name.replace(/^./, (match) => match.toUpperCase())}
+								{name.replace(/\b\w/g, (match) => match.toUpperCase())}
 							</NavLink>
 						</li>
 					))}
