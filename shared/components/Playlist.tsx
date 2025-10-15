@@ -23,24 +23,28 @@ export default function Playlist({ userId }: { userId?: string }) {
 	const skeletons = Array(4).fill(0);
 	return (
 		<article className="flex flex-row flex-wrap gap-6">
-			{isLoading
-				? skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
-				: albums.map(({ attributes, id }) => {
-						return (
-							<Link
-								to={"/playlists"}
+			{isLoading ? (
+				skeletons.map((element, idx) => <AlbumCardSkeleton key={element + idx} />)
+			) : albums.length ? (
+				albums.map(({ attributes, id }) => {
+					return (
+						<Link
+							to={"/playlists"}
+							key={id}
+						>
+							<AlbumCard
+								title={attributes.title}
+								description={attributes.description || ""}
+								titleColor="red"
+								img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
 								key={id}
-							>
-								<AlbumCard
-									title={attributes.title}
-									description={attributes.description || ""}
-									titleColor="red"
-									img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
-									key={id}
-								/>
-							</Link>
-						);
-				  })}
+							/>
+						</Link>
+					);
+				})
+			) : (
+				<button className={"size-10 bg-darkBackground border border-borderColor flex justify-center items-center rounded-full cursor-pointer hover:bg-darkBackgroundHover transition text-xl"}>+</button>
+			)}
 		</article>
 	);
 }
