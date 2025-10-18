@@ -43,7 +43,11 @@ export default function Playlist({ userId }: { userId?: string }) {
 					);
 				})
 			) : (
-				<button className={"size-10 bg-darkBackground border border-borderColor flex justify-center items-center rounded-full cursor-pointer hover:bg-darkBackgroundHover transition text-xl"}>+</button>
+				<>
+					<Link to="/new">
+						<button className={"size-10 bg-darkBackground border border-borderColor flex justify-center items-center rounded-full cursor-pointer hover:bg-darkBackgroundHover transition text-xl"}>+</button>
+					</Link>
+				</>
 			)}
 		</article>
 	);
