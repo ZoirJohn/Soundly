@@ -19,7 +19,10 @@ export default function NewPlaylist() {
 			});
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries();
+			queryClient.invalidateQueries({
+				queryKey: ["playlists"],
+				refetchType: "none",
+			});
 		},
 	});
 	const {
