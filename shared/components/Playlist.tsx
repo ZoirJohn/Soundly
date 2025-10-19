@@ -1,24 +1,43 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "./ui/albumCard";
 import { Link } from "react-router";
 
 export default function Playlist({ userId }: { userId?: string }) {
+	const queryClient = useQueryClient();
 	const { data, isLoading } = useQuery({
 		queryKey: ["playlists", userId],
-		queryFn: async () =>
-			(
-				await client.GET("/playlists", {
-					params: {
-						query: {
-							pageSize: 4,
-							userId,
-						},
+		queryFn: async () => {
+			const response = await client.GET("/playlists", {
+				params: {
+					query: {
+						pageSize: 4,
+						userId,
 					},
-				})
-			).data,
+				},
+			});
+			return response.data;
+		},
 	});
-
+	const mutation = useMutation({
+		mutationFn: async (id: string) => {
+			const response = await client.DELETE(`/playlists/{playlistId}`, {
+				params: {
+					path: {
+						playlistId: id,
+					},
+				},
+			});
+			return response.data;
+		},
+		onSuccess: (_, id) =>
+			queryClient.setQueriesData({ queryKey: ["playlists"] }, (data: any) => {
+				return {
+					...data,
+					data: data.data.filter((data: AlbumCard) => data.id !== id),
+				};
+			}),
+	});
 	const albums = data?.data.length ? data.data : [];
 	const skeletons = Array(4).fill(0);
 	return (
@@ -37,7 +56,9 @@ export default function Playlist({ userId }: { userId?: string }) {
 									titleColor="red"
 									img={attributes.images.main?.length ? attributes.images.main[0].url : "assets/images/background1.png"}
 									key={id}
+									id={id}
 									isOwn={!!userId}
+									mutation={mutation}
 								/>
 							</Link>
 						);

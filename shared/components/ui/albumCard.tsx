@@ -1,4 +1,9 @@
-export function AlbumCard({ title, description, titleColor, img, isOwn }: AlbumCard & { isOwn: boolean }) {
+import type { MutationFunction, UseMutationResult } from "@tanstack/react-query";
+
+export function AlbumCard({ title, description, titleColor, img, isOwn, mutation, id }: AlbumCard & { isOwn: boolean; mutation: UseMutationResult<void, Error, string> }) {
+	const handleDelete = (id: string) => {
+		mutation.mutate(id);
+	};
 	return (
 		<article className="group relative flex flex-col shadow-2xl shadow-black rounded-xl ring-black/20 hover:ring-10 max-w-albumCardWidth md:h-full min-h-albumCardHeight max-md:min-h-[300px] transition duration-300">
 			<div className="rounded-t-xl overflow-hidden">
@@ -26,7 +31,10 @@ export function AlbumCard({ title, description, titleColor, img, isOwn }: AlbumC
 				/>
 			</button>
 			{isOwn && (
-				<button className="right-18 bottom-19 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer">
+				<button
+					className="right-18 bottom-19 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
+					onClick={() => handleDelete(id)}
+				>
 					<img
 						className="size-4"
 						src="assets/icons/trashcan.svg"
