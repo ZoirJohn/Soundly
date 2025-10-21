@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "./ui/albumCard";
 import { Link } from "react-router";
+import { useState } from "react";
 
 export default function Playlist({ userId }: { userId?: string }) {
 	const queryClient = useQueryClient();
@@ -31,12 +32,13 @@ export default function Playlist({ userId }: { userId?: string }) {
 			return response.data;
 		},
 		onSuccess: (_, id) =>
-			queryClient.setQueriesData({ queryKey: ["playlists"] }, (data: any) => {
-				return {
-					...data,
-					data: data.data.filter((data: AlbumCard) => data.id !== id),
-				};
-			}),
+			// queryClient.setQueriesData({ queryKey: ["playlists"] }, (data: any) => {
+			// 	return {
+			// 		...data,
+			// 		data: data.data.filter((data: AlbumCard) => data.id !== id),
+			// 	};
+			// }),
+			queryClient.invalidateQueries(),
 	});
 	const albums = data?.data.length ? data.data : [];
 	const skeletons = Array(4).fill(0);

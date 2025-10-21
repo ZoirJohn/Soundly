@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { redirect } from "react-router";
 
 type TProps = {
 	title: string;
@@ -11,12 +12,16 @@ export default function NewPlaylist() {
 	const queryClient = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
-			await client.POST("/playlists", {
+			const response = await client.POST("/playlists", {
 				body: {
 					title,
 					description,
 				},
 			});
+			if (response.error) {
+				throw response.error;
+			}
+			return response;
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -30,9 +35,19 @@ export default function NewPlaylist() {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setError,
 	} = useForm<TProps>();
 	const onSubmit: SubmitHandler<TProps> = (data) => {
-		mutation.mutate(data), reset();
+		mutation.mutate(data);
+		console.log(mutation);
+		
+		if (mutation.isError) {
+			setError("root", { type: "custom", message: mutation.error.name });
+			redirect('playlists')
+			return;
+		}
+		if(mutation.isSuccess){
+		}
 	};
 	return (
 		<form
@@ -40,10 +55,16 @@ export default function NewPlaylist() {
 			className="flex flex-col max-w-1/4 [&>input]:px-4 [&>*]:py-2 [&>input]:bg-gray-800 [&>*]:rounded-md"
 		>
 			<h4 className="rowTitle">Create a playlist</h4>
-			<input {...register("title", { required: true })} />
+			<input
+				{...register("title", { required: true })}
+				placeholder="Title"
+			/>
 			{errors.title ? <span className="p-0 text-red-500">Title is required</span> : <span className="mb-6"></span>}
 
-			<input {...register("description", { required: true })} />
+			<input
+				{...register("description", { required: true })}
+				placeholder="Description"
+			/>
 			{errors.description ? <span className="p-0 text-red-500">Description is required</span> : <span className="mb-6"></span>}
 			<button
 				type="submit"
@@ -51,6 +72,7 @@ export default function NewPlaylist() {
 			>
 				Create
 			</button>
+			{errors.root && <h1>{errors.root.message}</h1>}
 		</form>
 	);
 }
