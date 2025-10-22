@@ -32,12 +32,6 @@ export default function Playlist({ userId }: { userId?: string }) {
 			return response.data;
 		},
 		onSuccess: (_, id) =>
-			// queryClient.setQueriesData({ queryKey: ["playlists"] }, (data: any) => {
-			// 	return {
-			// 		...data,
-			// 		data: data.data.filter((data: AlbumCard) => data.id !== id),
-			// 	};
-			// }),
 			queryClient.invalidateQueries(),
 	});
 	const albums = data?.data.length ? data.data : [];
