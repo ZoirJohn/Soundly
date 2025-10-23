@@ -8,7 +8,7 @@ type TProps = {
 	description: string;
 };
 
-export default function NewPlaylist() {
+export default function PlaylistForm({ header, playlistId }: { header?: string; playlistId?: string }) {
 	const queryClient = useQueryClient();
 	const mutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
@@ -37,24 +37,25 @@ export default function NewPlaylist() {
 		reset,
 		setError,
 	} = useForm<TProps>();
-	const onSubmit: SubmitHandler<TProps> = (data) => {
+	const onSubmitCreate: SubmitHandler<TProps> = (data) => {
 		mutation.mutate(data);
 		console.log(mutation);
-		
+
 		if (mutation.isError) {
 			setError("root", { type: "custom", message: mutation.error.name });
-			redirect('playlists')
+			redirect("playlists");
 			return;
 		}
-		if(mutation.isSuccess){
+		if (mutation.isSuccess) {
 		}
 	};
+	const onSubmitEdit: SubmitHandler<TProps> = (data) => {};
 	return (
 		<form
-			onSubmit={handleSubmit(onSubmit)}
+			onSubmit={handleSubmit(playlistId ? onSubmitEdit : onSubmitCreate)}
 			className="flex flex-col max-w-1/4 [&>input]:px-4 [&>*]:py-2 [&>input]:bg-gray-800 [&>*]:rounded-md"
 		>
-			<h4 className="rowTitle">Create a playlist</h4>
+			<h4 className="rowTitle">{header}</h4>
 			<input
 				{...register("title", { required: true })}
 				placeholder="Title"
@@ -70,7 +71,7 @@ export default function NewPlaylist() {
 				type="submit"
 				className="cursor-pointer bg-white text-black self-start px-6"
 			>
-				Create
+				{playlistId ? "Edit" : "Create"}
 			</button>
 			{errors.root && <h1>{errors.root.message}</h1>}
 		</form>

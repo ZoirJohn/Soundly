@@ -9,7 +9,7 @@ export default function Playlists() {
 	}
 	return (
 		<div className="max-w-7xl dark mx-auto">
-			<h4 className="rowTitle mb-4"> My Albums</h4>
+			<h4 className="rowTitle mb-4">My Albums</h4>
 			<Playlist userId={data?.data?.userId} />
 		</div>
 	);

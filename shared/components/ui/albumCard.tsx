@@ -1,6 +1,6 @@
 import type { MutationFunction, UseMutationResult } from "@tanstack/react-query";
 
-export function AlbumCard({ title, description, titleColor, img, isOwn, mutation, id }: AlbumCard & { isOwn: boolean; mutation: UseMutationResult<void, Error, string> }) {
+export function AlbumCard({ title, description, titleColor, img, isOwn, mutation, id, handleFormState }: AlbumCard & { isOwn: boolean; mutation: UseMutationResult<void, Error, string>; handleFormState?: () => void }) {
 	const handleDelete = (id: string) => {
 		mutation.mutate(id);
 	};
@@ -31,16 +31,28 @@ export function AlbumCard({ title, description, titleColor, img, isOwn, mutation
 				/>
 			</button>
 			{isOwn && (
-				<button
-					className="right-18 bottom-19 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
-					onClick={() => handleDelete(id)}
-				>
-					<img
-						className="size-4"
-						src="assets/icons/trashcan.svg"
-						alt="play-icon"
-					/>
-				</button>
+				<>
+					<button
+						className="right-18 bottom-19 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
+						onClick={() => handleDelete(id)}
+					>
+						<img
+							className="size-4"
+							src="assets/icons/trashcan.svg"
+							alt="play-icon"
+						/>
+					</button>
+					<button
+						className="left-4 top-4.75 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
+						onClick={() => handleFormState?.()}
+					>
+						<img
+							className="size-4"
+							src="assets/icons/pencil.svg"
+							alt="play-icon"
+						/>
+					</button>
+				</>
 			)}
 		</article>
 	);
