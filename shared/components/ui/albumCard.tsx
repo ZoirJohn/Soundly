@@ -1,20 +1,6 @@
-import { useQuery, type MutationFunction, type UseMutationResult } from "@tanstack/react-query";
-import { client } from "entities/api/client";
+import { type UseMutationResult } from "@tanstack/react-query";
 
 export function AlbumCard({ title, description, titleColor, img, isOwn, mutation, id, handleFormState }: AlbumCard & { isOwn: boolean; mutation: UseMutationResult<void, Error, string>; handleFormState?: () => void }) {
-	const { data } = useQuery({
-		queryKey: ["playlist"],
-		queryFn: async () => {
-			const response = await client.GET("/playlists/{playlistId}", {
-				params: {
-					path: { playlistId: id },
-				},
-			});
-
-			return response.data;
-		},
-		enabled: isOwn,
-	});
 	const handleDelete = (id: string) => {
 		mutation.mutate(id);
 	};

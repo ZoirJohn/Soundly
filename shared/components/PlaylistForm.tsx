@@ -1,16 +1,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { redirect } from "react-router";
+import { Navigate, redirect } from "react-router";
 
 type TProps = {
 	title: string;
 	description: string;
 };
 
-export default function PlaylistForm({ header, playlistId }: { header?: string; playlistId?: string }) {
+export default function PlaylistForm({ header, defaultValues, playlistId }: { header?: string; defaultValues?: TProps; playlistId: string }) {
+	const isEditPage = Object.entries(defaultValues || {}).length != 0;
 	const queryClient = useQueryClient();
-	const mutation = useMutation({
+	const createPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.POST("/playlists", {
 				body: {
@@ -30,6 +31,28 @@ export default function PlaylistForm({ header, playlistId }: { header?: string; 
 			});
 		},
 	});
+	const editPlaylistMutation = useMutation({
+		mutationFn: async ({ title, description }: TProps) => {
+			const response = await client.PUT("/playlists/{playlistId}", {
+				body: {
+					title,
+					description,
+					tagIds: [playlistId],
+				},
+				params: { path: { playlistId } },
+			});
+			if (response.error) {
+				throw response;
+			}
+			return response;
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["playlists"],
+				refetchType: "none",
+			});
+		},
+	});
 	const {
 		register,
 		handleSubmit,
@@ -38,40 +61,49 @@ export default function PlaylistForm({ header, playlistId }: { header?: string; 
 		setError,
 	} = useForm<TProps>();
 	const onSubmitCreate: SubmitHandler<TProps> = (data) => {
+		const mutation = createPlaylistMutation;
 		mutation.mutate(data);
-		console.log(mutation);
-
 		if (mutation.isError) {
 			setError("root", { type: "custom", message: mutation.error.name });
-			redirect("playlists");
-			return;
+			return <Navigate to="/" />;
 		}
 		if (mutation.isSuccess) {
 		}
 	};
-	const onSubmitEdit: SubmitHandler<TProps> = (data) => {};
+	const onSubmitEdit: SubmitHandler<TProps> = (data) => {
+		const mutation = editPlaylistMutation;
+		mutation.mutate(data);
+		if (mutation.isError) {
+			setError("root", { type: "custom", message: mutation.error.name });
+			return <Navigate to="/" />;
+		}
+		if (mutation.isSuccess) {
+		}
+	};
 	return (
 		<form
-			onSubmit={handleSubmit(playlistId ? onSubmitEdit : onSubmitCreate)}
+			onSubmit={handleSubmit(isEditPage ? onSubmitEdit : onSubmitCreate)}
 			className="flex flex-col max-w-1/4 [&>input]:px-4 [&>*]:py-2 [&>input]:bg-gray-800 [&>*]:rounded-md"
 		>
 			<h4 className="rowTitle">{header}</h4>
 			<input
 				{...register("title", { required: true })}
 				placeholder="Title"
+				defaultValue={defaultValues?.title}
 			/>
 			{errors.title ? <span className="p-0 text-red-500">Title is required</span> : <span className="mb-6"></span>}
 
 			<input
 				{...register("description", { required: true })}
 				placeholder="Description"
+				defaultValue={defaultValues?.description}
 			/>
 			{errors.description ? <span className="p-0 text-red-500">Description is required</span> : <span className="mb-6"></span>}
 			<button
 				type="submit"
 				className="cursor-pointer bg-white text-black self-start px-6"
 			>
-				{playlistId ? "Edit" : "Create"}
+				{isEditPage ? "Edit" : "Create"}
 			</button>
 			{errors.root && <h1>{errors.root.message}</h1>}
 		</form>

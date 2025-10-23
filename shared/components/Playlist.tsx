@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "./ui/albumCard";
-import { Link } from "react-router";
 import { useState } from "react";
 import PlaylistForm from "./PlaylistForm";
 
@@ -40,7 +39,10 @@ export default function Playlist({ userId }: { userId?: string }) {
 	return (
 		<>
 			{openForm ? (
-				<PlaylistForm header="Edit a playlist" />
+				<PlaylistForm
+					header="Edit a playlist"
+					defaultValues={{ title: data?.data[0].attributes.title!, description: data?.data[0].attributes.description! }}
+				/>
 			) : (
 				<article className="flex flex-row flex-wrap gap-6 items-center">
 					{isLoading
