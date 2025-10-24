@@ -1,0 +1,64 @@
+app/
+    root.tsx
+    route.ts
+
+routes/                    # or pages/ - your routes
+    home/
+        route.ts
+        page.tsx
+    playlists/
+        route.ts
+        page.tsx
+    playlist.$id/
+        route.ts
+        page.tsx
+
+features/                  # The ONLY layer you really need
+    auth/
+        components/
+            LoginForm.tsx
+            LogoutButton.tsx
+        hooks/
+            useLogin.ts
+            useLogout.ts
+        api/
+            authQueries.ts
+        types.ts
+    
+    playlists/
+        components/
+            PlaylistCard.tsx
+            PlaylistList.tsx
+            CreatePlaylistForm.tsx
+        hooks/
+            usePlaylists.ts
+            useCreatePlaylist.ts
+        api/
+            playlistQueries.ts
+        types.ts
+    
+    tracks/
+        components/
+        hooks/
+        api/
+        types.ts
+
+shared/                    # Dumb reusable shit
+    ui/
+        Button.tsx
+        Input.tsx
+        Skeleton.tsx
+    hooks/
+        useDebounce.ts
+        useMediaQuery.ts
+    utils/
+        cn.ts
+        formatDate.ts
+    api/
+        client.ts         # Axios/fetch config
+    types/
+        common.ts
+
+assets/
+    images/
+    icons/
