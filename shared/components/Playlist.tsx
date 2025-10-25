@@ -4,8 +4,9 @@ import { AlbumCard, AlbumCardSkeleton } from "./ui/albumCard";
 import { useState } from "react";
 import PlaylistForm from "./PlaylistForm";
 
+type TProps = { playlistId?: string; isOpen: boolean };
 export default function Playlist({ userId }: { userId?: string }) {
-	const [{ playlistId, isOpen }, setOpenPlaylistId] = useState<{ playlistId?: string; isOpen: boolean }>({ playlistId: "", isOpen: false });
+	const [{ playlistId, isOpen }, setOpenPlaylistId] = useState<TProps>({ playlistId: "", isOpen: false });
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
@@ -43,11 +44,13 @@ export default function Playlist({ userId }: { userId?: string }) {
 				<PlaylistForm
 					header="Edit a playlist"
 					playlistId={playlistId}
+					manageFormState={() => setOpenPlaylistId({ isOpen: false })}
 				/>
 			) : isOpen ? (
 				<PlaylistForm
 					header="Edit a playlist"
 					playlistId=""
+					manageFormState={() => setOpenPlaylistId({ isOpen: false })}
 				/>
 			) : (
 				<article className="flex flex-row flex-wrap gap-6 items-center">

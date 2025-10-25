@@ -8,7 +8,7 @@ type TProps = {
 	description: string;
 };
 
-export default function PlaylistForm({ header, playlistId }: { header?: string; playlistId: string }) {
+export default function PlaylistForm({ header, playlistId, manageFormState }: { header?: string; playlistId: string; manageFormState: () => void }) {
 	const { data, isLoading } = useQuery({
 		queryKey: ["plyalist"],
 		queryFn: async () => {
@@ -67,6 +67,17 @@ export default function PlaylistForm({ header, playlistId }: { header?: string; 
 				queryKey: ["playlists"],
 				refetchType: "none",
 			});
+		},
+		onMutate: async (formData: { title: string; description: string }) => {
+			await queryClient.cancelQueries({ queryKey: ["plyalists"] });
+			const previousAlbums = queryClient.getQueryData(["playlists", playlistId]);
+			queryClient.setQueryData(["playlists", playlistId], formData);
+			console.log(previousAlbums, formData);
+			return { previousAlbums, formData };
+		},
+		onError: (error, newAlbum, onMutateResult) => {
+			console.log(newAlbum, onMutateResult);
+			queryClient.setQueryData(["playlists", playlistId], onMutateResult?.previousAlbums);
 		},
 	});
 	const {
