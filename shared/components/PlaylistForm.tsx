@@ -8,8 +8,24 @@ type TProps = {
 	description: string;
 };
 
-export default function PlaylistForm({ header, defaultValues, playlistId }: { header?: string; defaultValues?: TProps; playlistId: string }) {
-	const isEditPage = Object.entries(defaultValues || {}).length != 0;
+export default function PlaylistForm({ header, playlistId }: { header?: string; playlistId: string }) {
+	const { data, isLoading } = useQuery({
+		queryKey: ["plyalist"],
+		queryFn: async () => {
+			const response = await client.GET("/playlists/{playlistId}", {
+				params: {
+					path: { playlistId },
+				},
+			});
+			if (response.error) {
+				throw response.error;
+			}
+			return response.data;
+		},
+		enabled: !!playlistId,
+	});
+	console.log(data);
+
 	const queryClient = useQueryClient();
 	const createPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
@@ -37,7 +53,7 @@ export default function PlaylistForm({ header, defaultValues, playlistId }: { he
 				body: {
 					title,
 					description,
-					tagIds: [playlistId],
+					tagIds: [],
 				},
 				params: { path: { playlistId } },
 			});
@@ -80,30 +96,32 @@ export default function PlaylistForm({ header, defaultValues, playlistId }: { he
 		if (mutation.isSuccess) {
 		}
 	};
-	return (
+	return isLoading ? (
+		<>Loading...</>
+	) : (
 		<form
-			onSubmit={handleSubmit(isEditPage ? onSubmitEdit : onSubmitCreate)}
+			onSubmit={handleSubmit(data?.data.id ? onSubmitEdit : onSubmitCreate)}
 			className="flex flex-col max-w-1/4 [&>input]:px-4 [&>*]:py-2 [&>input]:bg-gray-800 [&>*]:rounded-md"
 		>
 			<h4 className="rowTitle">{header}</h4>
 			<input
 				{...register("title", { required: true })}
 				placeholder="Title"
-				defaultValue={defaultValues?.title}
+				defaultValue={data?.data.attributes?.title}
 			/>
 			{errors.title ? <span className="p-0 text-red-500">Title is required</span> : <span className="mb-6"></span>}
 
 			<input
 				{...register("description", { required: true })}
 				placeholder="Description"
-				defaultValue={defaultValues?.description}
+				defaultValue={data?.data.attributes?.description!}
 			/>
 			{errors.description ? <span className="p-0 text-red-500">Description is required</span> : <span className="mb-6"></span>}
 			<button
 				type="submit"
 				className="cursor-pointer bg-white text-black self-start px-6"
 			>
-				{isEditPage ? "Edit" : "Create"}
+				{data?.data.id ? "Edit" : "Create"}
 			</button>
 			{errors.root && <h1>{errors.root.message}</h1>}
 		</form>

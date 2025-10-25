@@ -5,8 +5,9 @@ import { useState } from "react";
 import PlaylistForm from "./PlaylistForm";
 
 export default function Playlist({ userId }: { userId?: string }) {
-	const [openForm, setOpenForm] = useState(false);
+	const [{ playlistId, isOpen }, setOpenPlaylistId] = useState<{ playlistId?: string; isOpen: boolean }>({ playlistId: "", isOpen: false });
 	const queryClient = useQueryClient();
+
 	const { data, isLoading } = useQuery({
 		queryKey: ["playlists", userId],
 		queryFn: async () => {
@@ -38,10 +39,15 @@ export default function Playlist({ userId }: { userId?: string }) {
 	const skeletons = Array(4).fill(0);
 	return (
 		<>
-			{openForm ? (
+			{isOpen && playlistId ? (
 				<PlaylistForm
 					header="Edit a playlist"
-					defaultValues={{ title: data?.data[0].attributes.title!, description: data?.data[0].attributes.description! }}
+					playlistId={playlistId}
+				/>
+			) : isOpen ? (
+				<PlaylistForm
+					header="Edit a playlist"
+					playlistId=""
 				/>
 			) : (
 				<article className="flex flex-row flex-wrap gap-6 items-center">
@@ -58,13 +64,13 @@ export default function Playlist({ userId }: { userId?: string }) {
 										id={id}
 										isOwn={!!userId}
 										mutation={mutation}
-										handleFormState={() => setOpenForm(true)}
+										handleFormState={() => setOpenPlaylistId({ isOpen: true, playlistId: id })}
 									/>
 								);
 						  })}
 					{userId && (
 						<button
-							onClick={() => setOpenForm(true)}
+							onClick={() => setOpenPlaylistId({ isOpen: true })}
 							className="size-10 bg-darkBackground border border-borderColor flex justify-center items-center rounded-full cursor-pointer hover:bg-darkBackgroundHover transition text-xl"
 						>
 							+
