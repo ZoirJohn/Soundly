@@ -10,7 +10,7 @@ type TProps = {
 
 export default function PlaylistForm({ header, playlistId, manageFormState }: { header?: string; playlistId: string; manageFormState: () => void }) {
 	const { data, isLoading } = useQuery({
-		queryKey: ["plyalist"],
+		queryKey: ["playlist"],
 		queryFn: async () => {
 			const response = await client.GET("/playlists/{playlistId}", {
 				params: {
@@ -24,8 +24,6 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		},
 		enabled: !!playlistId,
 	});
-	console.log(data);
-
 	const queryClient = useQueryClient();
 	const createPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
@@ -69,14 +67,14 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			});
 		},
 		onMutate: async (formData: { title: string; description: string }) => {
-			await queryClient.cancelQueries({ queryKey: ["plyalists"] });
-			const previousAlbums = queryClient.getQueryData(["playlists", playlistId]);
-			queryClient.setQueryData(["playlists", playlistId], formData);
-			console.log(previousAlbums, formData);
-			return { previousAlbums, formData };
+			const response = await queryClient.cancelQueries({ queryKey: ["playlist"] });
+			const previousAlbums = queryClient.getQueriesData({ queryKey: ["playlist"] });
+			console.log(previousAlbums);
+
+			return { previousAlbums: {}, formData };
 		},
 		onError: (error, newAlbum, onMutateResult) => {
-			console.log(newAlbum, onMutateResult);
+			// console.log(newAlbum, onMutateResult);
 			queryClient.setQueryData(["playlists", playlistId], onMutateResult?.previousAlbums);
 		},
 	});
