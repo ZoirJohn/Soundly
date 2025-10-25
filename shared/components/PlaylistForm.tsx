@@ -74,8 +74,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			return { previousAlbums: {}, formData };
 		},
 		onError: (error, newAlbum, onMutateResult) => {
-			// console.log(newAlbum, onMutateResult);
-			queryClient.setQueryData(["playlists", playlistId], onMutateResult?.previousAlbums);
+				queryClient.setQueryData(["playlists", playlistId], onMutateResult?.previousAlbums);
 		},
 	});
 	const {
