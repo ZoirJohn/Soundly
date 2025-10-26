@@ -45,6 +45,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			});
 		},
 	});
+	const key = ["playlists", data?.data.attributes.user.id];
 	const editPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.PUT("/playlists/{playlistId}", {
@@ -67,14 +68,14 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			});
 		},
 		onMutate: async (formData: { title: string; description: string }) => {
-			const response = await queryClient.cancelQueries({ queryKey: ["playlist"] });
-			const previousAlbums = queryClient.getQueriesData({ queryKey: ["playlist"] });
+			await queryClient.cancelQueries({ queryKey: key });
+			const previousAlbums = queryClient.getQueryData(key);
 			console.log(previousAlbums);
 
-			return { previousAlbums: {}, formData };
+			return { previousAlbums };
 		},
-		onError: (error, newAlbum, onMutateResult) => {
-				queryClient.setQueryData(["playlists", playlistId], onMutateResult?.previousAlbums);
+		onError: (response, context) => {
+			queryClient.setQueryData(["playlists", data?.data.attributes.user.id], context);
 		},
 	});
 	const {
@@ -84,31 +85,23 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		reset,
 		setError,
 	} = useForm<TProps>();
-	const onSubmitCreate: SubmitHandler<TProps> = (data) => {
-		const mutation = createPlaylistMutation;
-		mutation.mutate(data);
+
+	const onSubmit: SubmitHandler<TProps> = (formData) => {
+		const mutation = data?.data.id ? editPlaylistMutation : createPlaylistMutation;
+		mutation.mutate(formData);
 		if (mutation.isError) {
 			setError("root", { type: "custom", message: mutation.error.name });
 			return <Navigate to="/" />;
 		}
 		if (mutation.isSuccess) {
-		}
-	};
-	const onSubmitEdit: SubmitHandler<TProps> = (data) => {
-		const mutation = editPlaylistMutation;
-		mutation.mutate(data);
-		if (mutation.isError) {
-			setError("root", { type: "custom", message: mutation.error.name });
-			return <Navigate to="/" />;
-		}
-		if (mutation.isSuccess) {
+			manageFormState();
 		}
 	};
 	return isLoading ? (
 		<>Loading...</>
 	) : (
 		<form
-			onSubmit={handleSubmit(data?.data.id ? onSubmitEdit : onSubmitCreate)}
+			onSubmit={handleSubmit(onSubmit)}
 			className="flex flex-col max-w-1/4 [&>input]:px-4 [&>*]:py-2 [&>input]:bg-gray-800 [&>*]:rounded-md"
 		>
 			<h4 className="rowTitle">{header}</h4>
