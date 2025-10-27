@@ -43,9 +43,14 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 				queryKey: ["playlists"],
 				refetchType: "none",
 			});
+			manageFormState();
+			return <Navigate to="/" />;
+		},
+		onError: (error) => {
+			console.error(error);
 		},
 	});
-	const key = ["playlists", data?.data.attributes.user.id];
+	const key = ["playlists", data?.data.attributes.user];
 	const editPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.PUT("/playlists/{playlistId}", {
@@ -71,12 +76,17 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			await queryClient.cancelQueries({ queryKey: key });
 			const previousAlbums = queryClient.getQueryData(key);
 			console.log(previousAlbums);
-
 			return { previousAlbums };
 		},
-		onError: (response, context) => {
-			queryClient.setQueryData(["playlists", data?.data.attributes.user.id], context);
+		onError: (error, __, context) => {
+			queryClient.setQueryData(["playlists", data?.data.attributes.user.id], context?.previousAlbums);
+			console.error(error);
 		},
+		// onSettled: () => {
+		// 	queryClient.invalidateQueries({ queryKey: ["playlists"] });
+		// 	manageFormState();
+		// 	return <Navigate to="/" />;
+		// },
 	});
 	const {
 		register,
@@ -89,13 +99,6 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 	const onSubmit: SubmitHandler<TProps> = (formData) => {
 		const mutation = data?.data.id ? editPlaylistMutation : createPlaylistMutation;
 		mutation.mutate(formData);
-		if (mutation.isError) {
-			setError("root", { type: "custom", message: mutation.error.name });
-			return <Navigate to="/" />;
-		}
-		if (mutation.isSuccess) {
-			manageFormState();
-		}
 	};
 	return isLoading ? (
 		<>Loading...</>
