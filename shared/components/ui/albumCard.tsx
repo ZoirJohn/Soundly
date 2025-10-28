@@ -14,7 +14,7 @@ export function AlbumCard({ title, description, titleColor, img, isOwn, mutation
 				/>
 			</div>
 			<div
-				className="flex bg-cover bg-center backdrop-blur-2xl rounded-b-xl overflow-hidden grow"
+				className="flex bg-cover bg-top rounded-b-xl grow"
 				style={{ backgroundImage: `url(${img})` }}
 			>
 				<div className="bg-black/20 backdrop-blur-xl p-4 grow">
@@ -43,7 +43,7 @@ export function AlbumCard({ title, description, titleColor, img, isOwn, mutation
 						/>
 					</button>
 					<button
-						className="left-4 top-4.75 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
+						className="top-4.75 md:bottom-25 xl:bottom-24 xl:group-hover:bottom-25 left-4 absolute flex justify-center items-center bg-white opacity-100 xl:group-hover:opacity-100 xl:opacity-0 rounded-full size-10 transition-all duration-350 delay-100 group-hover:cursor-pointer"
 						onClick={() => handleFormState?.()}
 					>
 						<img

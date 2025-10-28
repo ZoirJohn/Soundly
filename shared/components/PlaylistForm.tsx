@@ -7,6 +7,15 @@ type TProps = {
 	title: string;
 	description: string;
 };
+// data
+// :
+// [{…}]
+// meta
+// :
+// {page: 1, pageSize: 4, totalCount: 1, pagesCount: 1}
+// [[Prototype]]
+// :
+// Object
 
 export default function PlaylistForm({ header, playlistId, manageFormState }: { header?: string; playlistId: string; manageFormState: () => void }) {
 	const { data, isLoading } = useQuery({
@@ -50,7 +59,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			console.error(error);
 		},
 	});
-	const key = ["playlists", data?.data.attributes.user];
+	const key = ["playlists", data?.data.attributes.user.id];
 	const editPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.PUT("/playlists/{playlistId}", {
@@ -75,18 +84,38 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		onMutate: async (formData: { title: string; description: string }) => {
 			await queryClient.cancelQueries({ queryKey: key });
 			const previousAlbums = queryClient.getQueryData(key);
-			console.log(previousAlbums);
+
+			queryClient.setQueryData(key, (oldData: { data: { id: string; attributes: { description: string; title: string } }[]; meta: {} }) => {
+				return {
+					...oldData,
+					data: oldData.data.map((album) => {
+						if (album.id === data?.data.id) {
+							console.log(album);
+							return {
+								...album,
+								attributes: {
+									...album.attributes,
+									title: formData.title,
+									description: formData.description,
+								},
+							};
+						}
+						return album;
+					}),
+				};
+			});
+
 			return { previousAlbums };
 		},
 		onError: (error, __, context) => {
 			queryClient.setQueryData(["playlists", data?.data.attributes.user.id], context?.previousAlbums);
 			console.error(error);
 		},
-		// onSettled: () => {
-		// 	queryClient.invalidateQueries({ queryKey: ["playlists"] });
-		// 	manageFormState();
-		// 	return <Navigate to="/" />;
-		// },
+		onSettled: () => {
+			queryClient.invalidateQueries({ queryKey: ["playlists"] });
+			manageFormState();
+			return <Navigate to="/" />;
+		},
 	});
 	const {
 		register,
