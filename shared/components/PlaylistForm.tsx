@@ -7,15 +7,6 @@ type TProps = {
 	title: string;
 	description: string;
 };
-// data
-// :
-// [{…}]
-// meta
-// :
-// {page: 1, pageSize: 4, totalCount: 1, pagesCount: 1}
-// [[Prototype]]
-// :
-// Object
 
 export default function PlaylistForm({ header, playlistId, manageFormState }: { header?: string; playlistId: string; manageFormState: () => void }) {
 	const { data, isLoading } = useQuery({
@@ -77,7 +68,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["playlists"],
+				queryKey: key,
 				refetchType: "none",
 			});
 		},
@@ -108,11 +99,11 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			return { previousAlbums };
 		},
 		onError: (error, __, context) => {
-			queryClient.setQueryData(["playlists", data?.data.attributes.user.id], context?.previousAlbums);
+			queryClient.setQueryData(key, context?.previousAlbums);
 			console.error(error);
 		},
 		onSettled: () => {
-			queryClient.invalidateQueries({ queryKey: ["playlists"] });
+			queryClient.invalidateQueries({ queryKey: key });
 			manageFormState();
 			return <Navigate to="/" />;
 		},
