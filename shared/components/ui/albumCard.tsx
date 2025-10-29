@@ -5,7 +5,7 @@ export function AlbumCard({ title, description, titleColor, img, isOwn, mutation
 		mutation.mutate(id);
 	};
 	return (
-		<article className="group relative flex flex-col shadow-2xl shadow-black rounded-xl ring-black/20 hover:ring-10 max-w-albumCardWidth md:h-full min-h-albumCardHeight max-md:min-h-[300px] transition duration-300">
+		<article className="group relative flex flex-col shadow-2xl shadow-black rounded-2xl ring-black/20 hover:ring-10 max-w-albumCardWidth md:h-full min-h-albumCardHeight max-md:min-h-[300px] overflow-hidden transition duration-300">
 			<div className="rounded-t-xl overflow-hidden">
 				<img
 					src={img}
@@ -14,7 +14,7 @@ export function AlbumCard({ title, description, titleColor, img, isOwn, mutation
 				/>
 			</div>
 			<div
-				className="flex bg-cover bg-top rounded-b-xl grow"
+				className="flex bg-cover bg-top grow"
 				style={{ backgroundImage: `url(${img})` }}
 			>
 				<div className="bg-black/20 backdrop-blur-xl p-4 grow">

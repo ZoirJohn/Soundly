@@ -3,6 +3,7 @@ import { client } from "entities/api/client";
 import { AlbumCard, AlbumCardSkeleton } from "./ui/albumCard";
 import { useState } from "react";
 import PlaylistForm from "./PlaylistForm";
+import { playlists } from "entities/factoryKeys";
 
 type TProps = { playlistId?: string; isOpen: boolean };
 export default function Playlist({ userId }: { userId?: string }) {
@@ -10,7 +11,7 @@ export default function Playlist({ userId }: { userId?: string }) {
 	const queryClient = useQueryClient();
 
 	const { data, isLoading } = useQuery({
-		queryKey: ["playlists", userId],
+		queryKey: userId ? playlists.ownPlaylists(userId) : playlists.all,
 		queryFn: async () => {
 			const response = await client.GET("/playlists", {
 				params: {
@@ -23,6 +24,7 @@ export default function Playlist({ userId }: { userId?: string }) {
 			return response.data;
 		},
 	});
+
 	const mutation = useMutation({
 		mutationFn: async (id: string) => {
 			const response = await client.DELETE(`/playlists/{playlistId}`, {
@@ -36,6 +38,7 @@ export default function Playlist({ userId }: { userId?: string }) {
 		},
 		onSuccess: (_, id) => queryClient.invalidateQueries(),
 	});
+
 	const albums = data?.data.length ? data.data : [];
 	const skeletons = Array(4).fill(0);
 	return (

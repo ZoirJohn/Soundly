@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { client } from "entities/api/client";
+import { playlists } from "entities/factoryKeys";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { Navigate, redirect } from "react-router";
 
@@ -9,8 +10,10 @@ type TProps = {
 };
 
 export default function PlaylistForm({ header, playlistId, manageFormState }: { header?: string; playlistId: string; manageFormState: () => void }) {
+	const queryClient = useQueryClient();
+
 	const { data, isLoading } = useQuery({
-		queryKey: ["playlist"],
+		queryKey: playlists.currentPlaylist(playlistId),
 		queryFn: async () => {
 			const response = await client.GET("/playlists/{playlistId}", {
 				params: {
@@ -24,7 +27,8 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		},
 		enabled: !!playlistId,
 	});
-	const queryClient = useQueryClient();
+	const key = playlists.ownPlaylists(data?.data.attributes.user.id as string);
+
 	const createPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.POST("/playlists", {
@@ -40,7 +44,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["playlists"],
+				queryKey: key,
 				refetchType: "none",
 			});
 			manageFormState();
@@ -50,7 +54,7 @@ export default function PlaylistForm({ header, playlistId, manageFormState }: { 
 			console.error(error);
 		},
 	});
-	const key = ["playlists", data?.data.attributes.user.id];
+
 	const editPlaylistMutation = useMutation({
 		mutationFn: async ({ title, description }: TProps) => {
 			const response = await client.PUT("/playlists/{playlistId}", {
